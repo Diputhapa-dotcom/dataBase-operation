@@ -1,53 +1,82 @@
-const express=require('express');
-const app=express();
+const express=require("express");
+const { logins } = require("./model");
+const  bcrypt = require("bcrypt");
+const { where } = require("sequelize");
+const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-const
+require("./model/index");
 
-const db = require("./model/index") //to call the database connection
-
-
-// to use html code
-app.set('view engine','ejs');
-app.use(express.urlencoded({extended :true})); //ssr
-app.use(express.json());   //like React,vuejs
-
-
-app.get('/',(req,res)=>{
-
-      res.render('home');
-});
+app.set("view engine","ejs");
 
 
-app.get('/register',(req,res)=>{
- res.render("auth/register")
-});
-
-app.get('/login',(req,res)=>{
-      res.render("auth/login")
-});
-
-app.post('/register',async(req,res)=>{
-      const {username,password,email} = req.body;
-
-    await db.users.create({
-        email,
-        password,
-        username
-    })
-    res.send("succesfully");
-  
-
+app.get('/table',async (req,res)=>{
+      const data=await logins.findAll();
+      res.render("table.ejs",{login:data});
+      
 })
+app.get("/login",(req,res)=>{
+      res.render("login.ejs");
+});
+
+app.post("/login", async (req,res)=>{
+      const {email,password} = req.body;
+      if(!email||!password){
+            return `please  email password`;
+      }
+       
+     await logins.create({
+            email,
+            password:await bcrypt.hashSync(password,10)
+      });
+
+      res.redirect("/table");
+
+
+         app.get("/delete/:id",async (req,res)=>{
+           const id= req.params.id;
+           console.log(id);
+           await logins.destroy({
+            where:{
+                  id:id,
+            }
+           });
+
+        res.redirect("/table")
+         });
+});
+
+
+app.get("/update/:id",async (req,res)=>{
+     const id=req.params.id;
+    const pkey= await logins.findByPk(id);
+      res.render("updateData.ejs",{ids:pkey});
+//      console.log(id);
 
 
 
-app.use(express.static('public/css/'));
-// app.use(express.static('public/css/nav.css'));
+});
+app.post("/updatedData/:id",async (req,res)=>{
+ const id = req.params.id;
+ const {email,password}=req.body;
+
+ await logins.update({
+      email:email,
+      password:password
+ },{
+      where:{
+            id:id,
+      }
+ });
+  
+   res.redirect("/table");
+});
 
 
 
-const port=3000;
-app.listen(port,()=>{
-      console.log("project has start at port " + port);
 
+
+app.listen('3000',()=>{
+      console.log("the project has started at 3000 port");
 });

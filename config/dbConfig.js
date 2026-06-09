@@ -2,7 +2,7 @@ module.exports = {
     HOST: "localhost",
     USER: "root",
     PASSWORD: "",
-    DB: "namaskarnodejs",
+    DB: "table",
     dialect: "mysql",
     pool: {
       max: 5,
@@ -11,4 +11,3 @@ module.exports = {
       idle: 10000,
     },
   };
-  

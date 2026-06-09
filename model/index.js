@@ -6,8 +6,8 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
   operatorsAliases: false,
-  port :3306,
-
+  port:3306,
+  
   pool: {
     max: dbConfig.pool.max,
     min: dbConfig.pool.min,
@@ -30,13 +30,14 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-// importing model files 
-db.users = require("./userModel.js")(sequelize, DataTypes);
 
-db.blogs= require("./blog.js")(sequelize,DataTypes);
+db.logins = require("./loginModel.js")(sequelize,DataTypes);
+db.blogs = require("./loginModel.js")(sequelize,DataTypes);
+
+
 
 db.sequelize.sync({ force: false}).then(() => {
   console.log("yes re-sync done");
 });
 
-module.exports = db;
+module.exports = db;      
