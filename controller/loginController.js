@@ -28,7 +28,5 @@ exports.loginPost = async (req,res)=>{
     } else{
         res.send("please enter valid email and password");
     }
-
-
-
+    
 };
