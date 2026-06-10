@@ -32,7 +32,9 @@ db.sequelize = sequelize;
 
 
 db.logins = require("./loginModel.js")(sequelize,DataTypes);
-db.blogs = require("./loginModel.js")(sequelize,DataTypes);
+db.registers = require("./registerModel.js")(sequelize,DataTypes);
+
+
 
 
 
